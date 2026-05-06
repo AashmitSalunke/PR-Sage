@@ -1,6 +1,6 @@
-# Review Agent 🤖
+# PR-Sage 🤖
 
-An autonomous code review agent that fetches GitHub PR diffs, streams them through a local **Ollama** LLM, and optionally posts inline review comments back to GitHub.
+Built PR Sage, a full-stack AI code review platform that autonomously analyzes GitHub Pull Requests using a local LLM (deepseek-coder via Ollama). Features real-time review streaming via SSE, inline GitHub comment posting, JWT-based auth, per-user settings, and full review history — all on a MERN stack.
 
 ---
 
