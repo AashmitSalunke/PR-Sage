@@ -1,6 +1,6 @@
 # PR-Sage 🤖
 
-Built PR Sage, a full-stack AI code review platform that autonomously analyzes GitHub Pull Requests using a local LLM (deepseek-coder via Ollama). Features real-time review streaming via SSE, inline GitHub comment posting, JWT-based auth, per-user settings, and full review history — all on a MERN stack.
+Built PR Sage, a full-stack AI code review platform that autonomously analyzes GitHub Pull Requests using the Google Gemini API. Features real-time review streaming via SSE, inline GitHub comment posting, JWT-based auth, per-user settings, and full review history — all on a MERN stack.
 
 ---
 
@@ -10,7 +10,7 @@ Built PR Sage, a full-stack AI code review platform that autonomously analyzes G
 React (Vite)  ──REST/SSE──►  Express/Node.js  ──Mongoose──►  MongoDB
                                    │
                           ┌────────┴────────┐
-                     GitHub API         Ollama (local)
+                     GitHub API          Gemini API
                   (diffs / comments)   (LLM streaming)
 ```
 
@@ -22,15 +22,12 @@ React (Vite)  ──REST/SSE──►  Express/Node.js  ──Mongoose──► 
 |------|---------|
 | Node.js | ≥ 18 |
 | MongoDB | ≥ 6 (local or Atlas) |
-| Ollama | Latest — https://ollama.ai |
 | Git | Any |
 
-### Pull an Ollama model
+### Get a Gemini API Key
 
-```bash
-ollama pull codellama
-# or: ollama pull llama3 / deepseek-coder
-```
+1. Go to [Google AI Studio](https://aistudio.google.com/)
+2. Create an API key and add it to your `.env` file.
 
 ---
 
@@ -86,8 +83,7 @@ See `.env` for the full list. Key variables:
 - `MONGODB_URI` — MongoDB connection string
 - `JWT_SECRET` — Secret for signing JWTs (min 32 chars)
 - `ENCRYPTION_KEY` — 32-char key for encrypting GitHub tokens in DB
-- `OLLAMA_BASE_URL` — Ollama server URL (default: `http://localhost:11434`)
-- `OLLAMA_DEFAULT_MODEL` — Default model (default: `codellama`)
+- `GEMINI_API_KEY` — Google Gemini API key
 
 ---
 
