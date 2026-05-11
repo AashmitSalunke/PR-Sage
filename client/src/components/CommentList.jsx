@@ -3,30 +3,30 @@ import { AlertTriangle, AlertCircle, Lightbulb, ThumbsUp, FileCode } from 'lucid
 const severityConfig = {
   critical: {
     icon: AlertCircle,
-    className: 'border-red-500/30 bg-red-500/5',
-    iconClass: 'text-red-400',
-    labelClass: 'text-red-400',
+    className: 'border-red-200 bg-red-50/80 shadow-sm',
+    iconClass: 'text-red-500',
+    labelClass: 'text-red-600',
     label: 'Critical',
   },
   warning: {
     icon: AlertTriangle,
-    className: 'border-amber-500/30 bg-amber-500/5',
-    iconClass: 'text-amber-400',
-    labelClass: 'text-amber-400',
+    className: 'border-amber-200 bg-amber-50/80 shadow-sm',
+    iconClass: 'text-amber-500',
+    labelClass: 'text-amber-600',
     label: 'Warning',
   },
   suggestion: {
     icon: Lightbulb,
-    className: 'border-brand-500/30 bg-brand-500/5',
-    iconClass: 'text-brand-400',
-    labelClass: 'text-brand-400',
+    className: 'border-brand-200 bg-brand-50/80 shadow-sm',
+    iconClass: 'text-brand-500',
+    labelClass: 'text-brand-600',
     label: 'Suggestion',
   },
   praise: {
     icon: ThumbsUp,
-    className: 'border-emerald-500/30 bg-emerald-500/5',
-    iconClass: 'text-emerald-400',
-    labelClass: 'text-emerald-400',
+    className: 'border-emerald-200 bg-emerald-50/80 shadow-sm',
+    iconClass: 'text-emerald-500',
+    labelClass: 'text-emerald-600',
     label: 'Praise',
   },
 };
@@ -38,26 +38,26 @@ function CommentItem({ comment, index }) {
   return (
     <div
       id={`comment-${index}`}
-      className={`rounded-xl border p-4 animate-fade-in ${config.className}`}
+      className={`rounded-2xl border p-4 animate-fade-in ${config.className}`}
     >
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 shrink-0">
-          <Icon size={15} className={config.iconClass} />
+        <div className="mt-0.5 shrink-0 bg-white p-1.5 rounded-lg shadow-sm border border-surface-700/30">
+          <Icon size={16} className={config.iconClass} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span className={`text-xs font-semibold uppercase tracking-wider ${config.labelClass}`}>
+            <span className={`text-xs font-bold uppercase tracking-wide ${config.labelClass}`}>
               {config.label}
             </span>
             {comment.path && (
-              <span className="flex items-center gap-1 text-xs text-white/40 font-mono bg-white/5 px-2 py-0.5 rounded-md truncate max-w-xs">
-                <FileCode size={10} />
+              <span className="flex items-center gap-1.5 text-xs text-text-muted font-mono bg-white px-2 py-1 rounded-md border border-surface-700 shadow-sm truncate max-w-xs">
+                <FileCode size={12} className="text-text-light" />
                 {comment.path}
-                {comment.line && <span className="text-white/30">:{comment.line}</span>}
+                {comment.line && <span className="text-text-light font-semibold">:{comment.line}</span>}
               </span>
             )}
           </div>
-          <p className="text-sm text-white/70 leading-relaxed whitespace-pre-wrap">{comment.body}</p>
+          <p className="text-sm text-text-main leading-relaxed whitespace-pre-wrap">{comment.body}</p>
         </div>
       </div>
     </div>
@@ -67,7 +67,7 @@ function CommentItem({ comment, index }) {
 export default function CommentList({ comments = [] }) {
   if (comments.length === 0) {
     return (
-      <div className="text-center py-12 text-white/30">
+      <div className="text-center py-12 text-text-muted">
         <p className="text-sm">No comments yet.</p>
       </div>
     );
@@ -85,7 +85,7 @@ export default function CommentList({ comments = [] }) {
   }, {});
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Summary chips */}
       <div className="flex flex-wrap gap-2 mb-4">
         {Object.entries(counts).map(([severity, count]) => {
@@ -93,8 +93,8 @@ export default function CommentList({ comments = [] }) {
           if (!cfg) return null;
           const SIcon = cfg.icon;
           return (
-            <span key={severity} className={`flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border ${cfg.className} ${cfg.labelClass}`}>
-              <SIcon size={11} />
+            <span key={severity} className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border bg-white shadow-sm ${cfg.labelClass} ${cfg.className.split(' ')[0]}`}>
+              <SIcon size={13} />
               {count} {cfg.label}
             </span>
           );
@@ -107,3 +107,4 @@ export default function CommentList({ comments = [] }) {
     </div>
   );
 }
+

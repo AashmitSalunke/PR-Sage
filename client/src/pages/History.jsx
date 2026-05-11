@@ -41,38 +41,40 @@ export default function History() {
   const pagination = data?.pagination;
 
   return (
-    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8 animate-fade-in">
-        <h1 className="section-title flex items-center gap-2">
-          <HistoryIcon size={22} className="text-brand-400" />
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div className="mb-10 animate-fade-in text-center">
+        <div className="inline-flex items-center justify-center p-3 bg-brand-50 rounded-2xl mb-4 shadow-sm animate-float">
+          <HistoryIcon size={28} className="text-brand-500" />
+        </div>
+        <h1 className="section-title">
           Review History
         </h1>
-        <p className="section-subtitle">All your past PR reviews</p>
+        <p className="section-subtitle text-lg">Browse all your past PR reviews and their insights</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* List */}
-        <div className="lg:col-span-2 space-y-3">
+        <div className="lg:col-span-2 space-y-4">
           {isLoading && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="card h-24 animate-pulse bg-surface-700/50" />
+                <div key={i} className="card h-28 animate-pulse bg-surface-800/50 border-dashed" />
               ))}
             </div>
           )}
 
           {error && (
-            <div className="card border-red-500/20 bg-red-500/5 text-red-400 text-sm flex items-center gap-2">
-              <AlertCircle size={15} />
+            <div className="card border-red-200 bg-red-50 text-red-600 text-sm flex items-center gap-3 shadow-sm font-semibold">
+              <AlertCircle size={18} className="text-red-500" />
               Failed to load history
             </div>
           )}
 
           {!isLoading && data?.reviews?.length === 0 && (
-            <div className="card text-center py-12">
-              <HistoryIcon size={32} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/30 text-sm">No reviews yet.</p>
-              <p className="text-white/20 text-xs mt-1">Submit a PR from the Dashboard.</p>
+            <div className="card text-center py-16 border-dashed border-2">
+              <HistoryIcon size={48} className="text-surface-500/40 mx-auto mb-4" />
+              <p className="text-text-muted font-bold text-base">No reviews yet.</p>
+              <p className="text-text-light text-sm mt-1">Head to the Dashboard to submit a PR.</p>
             </div>
           )}
 
@@ -87,27 +89,27 @@ export default function History() {
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center justify-between pt-4">
               <button
                 id="btn-prev-page"
                 onClick={() => setPage((p) => p - 1)}
                 disabled={!pagination.hasPrevPage}
-                className="btn-secondary py-2 px-3 text-xs disabled:opacity-30"
+                className="btn-secondary py-2.5 px-4 text-sm disabled:opacity-50"
               >
-                <ChevronLeft size={14} />
+                <ChevronLeft size={16} />
                 Prev
               </button>
-              <span className="text-white/30 text-xs">
-                Page {pagination.page} / {pagination.totalPages}
+              <span className="text-text-muted font-semibold text-sm bg-surface-800 px-3 py-1.5 rounded-lg border border-surface-700">
+                Page {pagination.page} of {pagination.totalPages}
               </span>
               <button
                 id="btn-next-page"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!pagination.hasNextPage}
-                className="btn-secondary py-2 px-3 text-xs disabled:opacity-30"
+                className="btn-secondary py-2.5 px-4 text-sm disabled:opacity-50"
               >
                 Next
-                <ChevronRight size={14} />
+                <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -116,49 +118,56 @@ export default function History() {
         {/* Detail panel */}
         <div className="lg:col-span-3">
           {selected ? (
-            <div className="card sticky top-24 animate-slide-up">
-              <div className="flex items-start justify-between mb-4">
+            <div className="card sticky top-24 animate-slide-up shadow-xl border-t-4 border-t-brand-400">
+              <div className="flex items-start justify-between mb-6 pb-4 border-b border-surface-700/50">
                 <div>
-                  <h2 className="font-bold text-white">{selected.prTitle || `PR #${selected.prNumber}`}</h2>
-                  <p className="text-white/40 text-xs mt-0.5">
-                    {selected.owner}/{selected.repo} · {selected.model}
+                  <h2 className="font-extrabold text-text-main text-xl">{selected.prTitle || `PR #${selected.prNumber}`}</h2>
+                  <p className="text-text-muted font-medium text-sm mt-1">
+                    {selected.owner}/{selected.repo} · <span className="text-text-light">{selected.model}</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     id="btn-post-comments"
                     onClick={() => handlePostToGitHub(selected._id)}
                     disabled={postingId === selected._id}
-                    className="btn-secondary py-2 text-xs gap-1.5"
+                    className="btn-primary py-2.5 px-4 text-sm gap-2"
                   >
-                    <Github size={13} />
+                    {postingId === selected._id ? (
+                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Github size={16} />
+                    )}
                     {postingId === selected._id ? 'Posting...' : 'Post to GitHub'}
                   </button>
                   <button
                     id="btn-close-detail"
                     onClick={() => setSelected(null)}
-                    className="p-2 rounded-lg text-white/30 hover:text-white hover:bg-white/5 transition-colors"
+                    className="p-2 rounded-xl text-text-muted hover:text-text-main hover:bg-surface-800 transition-colors border border-transparent hover:border-surface-700"
                   >
-                    <X size={15} />
+                    <X size={18} />
                   </button>
                 </div>
               </div>
 
               {postError && (
-                <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-                  <AlertCircle size={13} />
+                <div className="mb-5 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-600 font-medium text-sm flex items-center gap-2 shadow-sm">
+                  <AlertCircle size={16} className="text-red-500" />
                   {postError}
                 </div>
               )}
 
-              <div className="max-h-[60vh] overflow-y-auto">
+              <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                 <CommentList comments={selected.comments || []} />
               </div>
             </div>
           ) : (
-            <div className="card flex flex-col items-center justify-center py-20 text-center">
-              <HistoryIcon size={40} className="text-white/10 mb-4" />
-              <p className="text-white/30 text-sm">Select a review to see details</p>
+            <div className="card flex flex-col items-center justify-center py-32 text-center h-full border-dashed border-2">
+              <div className="w-20 h-20 rounded-full bg-surface-800 flex items-center justify-center mb-6 border border-surface-700">
+                 <HistoryIcon size={32} className="text-surface-500" />
+              </div>
+              <h3 className="text-text-main font-bold text-xl mb-2">Review Details</h3>
+              <p className="text-text-muted text-sm max-w-xs mx-auto">Select any review from the list to see the detailed insights and post comments to GitHub.</p>
             </div>
           )}
         </div>
@@ -166,3 +175,4 @@ export default function History() {
     </main>
   );
 }
+

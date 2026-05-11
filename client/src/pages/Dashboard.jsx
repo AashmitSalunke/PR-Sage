@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import CommentList from '../components/CommentList.jsx';
-import { GitPullRequest, Send, Zap, AlertCircle, CheckCircle, ChevronDown } from 'lucide-react';
+import { GitPullRequest, Send, Zap, AlertCircle, CheckCircle, ChevronDown, Sparkles } from 'lucide-react';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -152,33 +152,36 @@ export default function Dashboard() {
   };
 
   const eventColors = {
-    info: 'text-white/50',
-    progress: 'text-brand-400',
-    success: 'text-emerald-400',
-    done: 'text-emerald-300 font-semibold',
-    error: 'text-red-400',
-    warning: 'text-amber-400',
+    info: 'text-text-light',
+    progress: 'text-brand-500 font-medium',
+    success: 'text-emerald-600',
+    done: 'text-emerald-600 font-bold',
+    error: 'text-red-500',
+    warning: 'text-amber-500',
   };
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
       {/* Header */}
-      <div className="mb-8 animate-fade-in">
-        <h1 className="section-title flex items-center gap-2">
-          <Zap size={22} className="text-brand-400" />
-          Review Dashboard
+      <div className="mb-10 animate-fade-in text-center max-w-2xl mx-auto">
+        <div className="inline-flex items-center justify-center p-3 bg-brand-50 rounded-2xl mb-4 shadow-sm animate-float">
+          <Sparkles size={28} className="text-brand-500" />
+        </div>
+        <h1 className="section-title">
+          Ready to review your code?
         </h1>
-        <p className="section-subtitle">Paste a GitHub PR URL to start an AI-powered code review</p>
+        <p className="section-subtitle text-lg">Paste a GitHub PR URL below and let our intelligent agent analyze your changes instantly.</p>
       </div>
 
       {/* PR URL Form */}
-      <form id="form-start-review" onSubmit={handleStartReview} className="card mb-6 animate-slide-up">
-        <label htmlFor="input-pr-url" className="label text-base font-semibold text-white/80 mb-3">
+      <form id="form-start-review" onSubmit={handleStartReview} className="card mb-8 animate-slide-up max-w-3xl mx-auto relative overflow-hidden group">
+        <div className="absolute top-0 left-0 w-1 bg-brand-500 h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <label htmlFor="input-pr-url" className="label text-base font-semibold text-text-main mb-3">
           GitHub Pull Request URL
         </label>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <GitPullRequest size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
+            <GitPullRequest size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-light" />
             <input
               id="input-pr-url"
               type="url"
@@ -187,23 +190,23 @@ export default function Dashboard() {
               placeholder="https://github.com/owner/repo/pull/123"
               required
               disabled={reviewing}
-              className="input pl-10"
+              className="input pl-12 h-12 text-base"
             />
           </div>
           <button
             id="btn-start-review"
             type="submit"
             disabled={reviewing || !prUrl.trim()}
-            className="btn-primary shrink-0"
+            className="btn-primary shrink-0 h-12 px-8 text-base shadow-brand-500/20"
           >
             {reviewing ? (
               <>
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                 Reviewing...
               </>
             ) : (
               <>
-                <Send size={15} />
+                <Send size={16} />
                 Start Review
               </>
             )}
@@ -213,39 +216,46 @@ export default function Dashboard() {
 
       {/* PR Info Banner */}
       {prInfo && (
-        <div className="glass p-4 mb-6 animate-fade-in">
-          <p className="font-semibold text-white text-sm">{prInfo.title}</p>
-          {prInfo.description && (
-            <p className="text-white/40 text-xs mt-1 line-clamp-2">{prInfo.description}</p>
-          )}
-          <div className="flex gap-4 mt-2 text-xs">
-            <span className="text-emerald-400">+{prInfo.additions} additions</span>
-            <span className="text-red-400">-{prInfo.deletions} deletions</span>
+        <div className="glass p-5 mb-8 animate-fade-in flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-3xl mx-auto">
+          <div>
+            <p className="font-bold text-text-main text-base">{prInfo.title}</p>
+            {prInfo.description && (
+              <p className="text-text-muted text-sm mt-1 line-clamp-2 leading-relaxed">{prInfo.description}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-3 text-sm font-medium bg-white px-4 py-2 rounded-xl shadow-sm border border-surface-700 whitespace-nowrap">
+            <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">+{prInfo.additions} additions</span>
+            <span className="text-red-500 bg-red-50 px-2 py-0.5 rounded-md">-{prInfo.deletions} deletions</span>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Live Log */}
-        <div className="card flex flex-col gap-0">
-          <h2 className="font-semibold text-white text-sm mb-3 flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${reviewing ? 'bg-brand-400 animate-pulse' : status === 'done' ? 'bg-emerald-400' : status === 'error' ? 'bg-red-400' : 'bg-white/20'}`} />
-            Live Log
+        <div className="card flex flex-col gap-0 border-t-4 border-t-surface-600">
+          <h2 className="font-bold text-text-main mb-4 flex items-center gap-2">
+            <div className={`flex items-center justify-center w-6 h-6 rounded-md ${reviewing ? 'bg-brand-100 text-brand-600 animate-pulse' : status === 'done' ? 'bg-emerald-100 text-emerald-600' : status === 'error' ? 'bg-red-100 text-red-600' : 'bg-surface-800 text-text-muted'}`}>
+               {reviewing ? <Zap size={14} /> : status === 'done' ? <CheckCircle size={14} /> : status === 'error' ? <AlertCircle size={14} /> : <Zap size={14} />}
+            </div>
+            Live Activity
           </h2>
-          <div className="flex-1 min-h-[200px] max-h-64 overflow-y-auto font-mono text-xs space-y-1 bg-surface-900/60 rounded-xl p-3">
+          <div className="flex-1 min-h-[250px] max-h-72 overflow-y-auto font-mono text-sm space-y-2 bg-surface-800 rounded-2xl p-4 shadow-inner border border-surface-700/50">
             {events.length === 0 && (
-              <p className="text-white/20">Waiting for review to start...</p>
+              <div className="flex flex-col items-center justify-center h-full text-text-light gap-2 opacity-60">
+                 <Zap size={24} className="mb-2" />
+                 <p>Awaiting PR submission...</p>
+              </div>
             )}
             {events.map((ev, i) => (
-              <div key={i} className={`flex gap-2 ${eventColors[ev.type] || 'text-white/50'}`}>
-                <span className="text-white/20 shrink-0">{ev.time}</span>
-                <span>{ev.message}</span>
+              <div key={i} className={`flex gap-3 ${eventColors[ev.type] || 'text-text-muted'}`}>
+                <span className="text-text-light shrink-0 text-xs mt-0.5 opacity-60">{ev.time}</span>
+                <span className="leading-relaxed">{ev.message}</span>
               </div>
             ))}
             {streamText && (
-              <div className="text-white/30 border-l-2 border-brand-500/30 pl-2 mt-1 whitespace-pre-wrap break-all">
+              <div className="text-text-muted border-l-2 border-brand-400 pl-3 mt-2 whitespace-pre-wrap break-all bg-white/50 p-2 rounded-r-lg">
                 {streamText}
-                <span className="inline-block w-1.5 h-3.5 bg-brand-400 ml-0.5 animate-pulse" />
+                <span className="inline-block w-1.5 h-4 bg-brand-500 ml-1 translate-y-0.5 animate-pulse" />
               </div>
             )}
             <div ref={logEndRef} />
@@ -253,24 +263,31 @@ export default function Dashboard() {
 
           {/* Status badge */}
           {status && (
-            <div className={`mt-3 flex items-center gap-2 text-xs ${status === 'done' ? 'text-emerald-400' : status === 'error' ? 'text-red-400' : 'text-brand-400'}`}>
-              {status === 'done' && <CheckCircle size={13} />}
-              {status === 'error' && <AlertCircle size={13} />}
-              {status === 'streaming' && <span className="w-3 h-3 border border-brand-400 border-t-transparent rounded-full animate-spin" />}
-              <span className="capitalize">{status}</span>
+            <div className={`mt-4 inline-flex items-center self-start gap-2 text-sm font-semibold px-3 py-1.5 rounded-lg ${status === 'done' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : status === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-brand-50 text-brand-600 border border-brand-100'}`}>
+              {status === 'done' && <CheckCircle size={14} />}
+              {status === 'error' && <AlertCircle size={14} />}
+              {status === 'streaming' && <span className="w-3.5 h-3.5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />}
+              <span className="capitalize">{status === 'streaming' ? 'Agent is thinking...' : status}</span>
             </div>
           )}
         </div>
 
         {/* Comments panel */}
-        <div className="card">
-          <h2 className="font-semibold text-white text-sm mb-4 flex items-center gap-2">
-            Review Comments
-            {comments.length > 0 && (
-              <span className="badge badge-info">{comments.length}</span>
+        <div className="card border-t-4 border-t-brand-400">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-text-main flex items-center gap-2">
+              Review Insights
+              {comments.length > 0 && (
+                <span className="badge badge-info shadow-sm">{comments.length}</span>
+              )}
+            </h2>
+          </div>
+          <div className="max-h-[20rem] overflow-y-auto pr-2 custom-scrollbar">
+            {comments.length === 0 && !reviewing && (
+               <div className="text-center py-10 text-text-muted bg-surface-800 rounded-2xl border border-surface-700/50 border-dashed">
+                 <p>No insights generated yet.</p>
+               </div>
             )}
-          </h2>
-          <div className="max-h-80 overflow-y-auto">
             <CommentList comments={comments} />
           </div>
 
@@ -278,22 +295,26 @@ export default function Dashboard() {
             <button
               id="btn-post-to-github"
               onClick={() => navigate(`/history`)}
-              className="btn-secondary w-full justify-center mt-4"
+              className="btn-secondary w-full justify-center mt-5"
             >
-              View in History
+              View Full Report in History
             </button>
           )}
         </div>
       </div>
 
       {error && (
-        <div className="card mt-6 border-red-500/20 bg-red-500/5 animate-fade-in">
-          <div className="flex items-center gap-2 text-red-400 text-sm">
-            <AlertCircle size={15} />
-            <strong>Error:</strong> {error}
+        <div className="card mt-8 border-red-200 bg-red-50 shadow-sm animate-fade-in flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+             <AlertCircle size={20} className="text-red-500" />
+          </div>
+          <div>
+             <h3 className="text-red-700 font-bold text-sm">Something went wrong</h3>
+             <p className="text-red-600 text-sm mt-0.5">{error}</p>
           </div>
         </div>
       )}
     </main>
   );
 }
+

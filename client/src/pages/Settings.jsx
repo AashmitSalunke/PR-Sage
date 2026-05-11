@@ -62,37 +62,39 @@ export default function Settings() {
   };
 
   return (
-    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8 animate-fade-in">
-        <h1 className="section-title flex items-center gap-2">
-          <SettingsIcon size={22} className="text-brand-400" />
+    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+      <div className="mb-10 animate-fade-in text-center">
+        <div className="inline-flex items-center justify-center p-3 bg-brand-50 rounded-2xl mb-4 shadow-sm animate-float">
+          <SettingsIcon size={28} className="text-brand-500" />
+        </div>
+        <h1 className="section-title">
           Settings
         </h1>
-        <p className="section-subtitle">Configure your GitHub token and Gemini AI model</p>
+        <p className="section-subtitle text-lg">Configure your GitHub token and Gemini AI model</p>
       </div>
 
       {isLoading ? (
-        <div className="card animate-pulse h-64 bg-surface-700/50" />
+        <div className="card animate-pulse h-64 bg-surface-800 border-dashed" />
       ) : (
-        <form id="form-settings" onSubmit={handleSubmit} className="space-y-6 animate-slide-up">
+        <form id="form-settings" onSubmit={handleSubmit} className="space-y-8 animate-slide-up">
 
           {/* Gemini AI Configuration */}
-          <div className="card">
-            <h2 className="font-semibold text-white flex items-center gap-2 mb-1">
-              <Sparkles size={16} className="text-brand-400" />
+          <div className="card border-t-4 border-t-brand-400">
+            <h2 className="font-bold text-text-main flex items-center gap-2 mb-2 text-lg">
+              <Sparkles size={20} className="text-brand-500" />
               Gemini AI Model
             </h2>
-            <p className="text-white/30 text-xs mb-4">
+            <p className="text-text-muted text-sm mb-5 leading-relaxed">
               Powered by Google Gemini API. Get your key at{' '}
               <a
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-0.5"
+                className="text-brand-500 font-semibold hover:text-brand-600 inline-flex items-center gap-1 transition-colors"
               >
-                aistudio.google.com <ExternalLink size={10} />
+                aistudio.google.com <ExternalLink size={12} />
               </a>
-              . The API key is set in your server's <code className="bg-white/5 px-1 py-0.5 rounded">.env</code> file.
+              . The API key is set in your server's <code className="bg-surface-800 border border-surface-700 px-1.5 py-0.5 rounded text-text-muted font-mono text-xs">.env</code> file.
             </p>
 
             <div className="space-y-3">
@@ -100,10 +102,10 @@ export default function Settings() {
                 <label
                   key={m.id}
                   htmlFor={`model-${m.id}`}
-                  className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                  className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
                     form.geminiModel === m.id
-                      ? 'border-brand-500/50 bg-brand-500/10'
-                      : 'border-white/5 hover:border-white/10 hover:bg-white/5'
+                      ? 'border-brand-300 bg-brand-50 shadow-sm'
+                      : 'border-surface-700 hover:border-surface-600 hover:bg-surface-800 hover:shadow-sm'
                   }`}
                 >
                   <input
@@ -113,11 +115,11 @@ export default function Settings() {
                     value={m.id}
                     checked={form.geminiModel === m.id}
                     onChange={(e) => setForm((f) => ({ ...f, geminiModel: e.target.value }))}
-                    className="accent-brand-500"
+                    className="w-5 h-5 accent-brand-500 text-brand-500 focus:ring-brand-500"
                   />
                   <div>
-                    <p className="text-sm font-medium text-white">{m.label}</p>
-                    <p className="text-xs text-white/40">{m.desc}</p>
+                    <p className={`text-base font-bold ${form.geminiModel === m.id ? 'text-brand-700' : 'text-text-main'}`}>{m.label}</p>
+                    <p className={`text-sm ${form.geminiModel === m.id ? 'text-brand-600/80' : 'text-text-muted'}`}>{m.desc}</p>
                   </div>
                 </label>
               ))}
@@ -126,57 +128,57 @@ export default function Settings() {
 
           {/* GitHub Token */}
           <div className="card">
-            <h2 className="font-semibold text-white flex items-center gap-2 mb-4">
-              <Github size={16} className="text-white/60" />
+            <h2 className="font-bold text-text-main flex items-center gap-2 mb-5 text-lg">
+              <Github size={20} className="text-text-muted" />
               GitHub Token
               {data?.hasGithubToken && (
-                <span className="badge badge-success ml-1">Saved ✓</span>
+                <span className="badge badge-success ml-2">Saved ✓</span>
               )}
             </h2>
 
             <div>
-              <label htmlFor="settings-github-token" className="label">
+              <label htmlFor="settings-github-token" className="label text-text-main font-semibold">
                 Personal Access Token
               </label>
-              <div className="relative">
+              <div className="relative mt-1">
                 <input
                   id="settings-github-token"
                   type={showToken ? 'text' : 'password'}
                   value={form.githubToken}
                   onChange={(e) => setForm((f) => ({ ...f, githubToken: e.target.value }))}
-                  placeholder={data?.hasGithubToken ? '••••••••  (leave blank to keep existing)' : 'ghp_xxxxxxxxxxxxxxxxxxxx'}
-                  className="input pr-10 font-mono text-xs"
+                  placeholder={data?.hasGithubToken ? '••••••••••••••••  (leave blank to keep existing)' : 'ghp_xxxxxxxxxxxxxxxxxxxx'}
+                  className="input pr-12 font-mono text-sm h-12"
                 />
                 <button
                   type="button"
                   onClick={() => setShowToken((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-light hover:text-text-main transition-colors bg-white rounded-full p-1 shadow-sm border border-surface-700"
                 >
-                  {showToken ? <EyeOff size={14} /> : <Eye size={14} />}
+                  {showToken ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              <p className="text-white/30 text-xs mt-1.5">
+              <p className="text-text-muted text-sm mt-2">
                 Create at{' '}
                 <a
                   href="https://github.com/settings/tokens"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-brand-400 hover:text-brand-300 inline-flex items-center gap-0.5"
+                  className="text-brand-500 font-semibold hover:text-brand-600 inline-flex items-center gap-1"
                 >
-                  github.com/settings/tokens <ExternalLink size={10} />
+                  github.com/settings/tokens <ExternalLink size={12} />
                 </a>
-                {' '}— needs <code className="bg-white/5 px-1 py-0.5 rounded">repo</code> scope.
+                {' '}— needs <code className="bg-surface-800 border border-surface-700 px-1.5 py-0.5 rounded text-text-muted font-mono text-xs">repo</code> scope.
               </p>
             </div>
           </div>
 
           {/* Review Preferences */}
-          <div className="card">
-            <h2 className="font-semibold text-white mb-4">Review Preferences</h2>
-            <div className="flex items-center justify-between">
+          <div className="card bg-gradient-to-br from-white to-surface-800">
+            <h2 className="font-bold text-text-main mb-5 text-lg">Review Preferences</h2>
+            <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-surface-700 shadow-sm">
               <div>
-                <p className="text-sm font-medium text-white/80">Auto-post comments to GitHub</p>
-                <p className="text-xs text-white/30 mt-0.5">
+                <p className="text-base font-bold text-text-main">Auto-post comments to GitHub</p>
+                <p className="text-sm text-text-muted mt-0.5">
                   Automatically post Gemini review comments after every review
                 </p>
               </div>
@@ -184,34 +186,35 @@ export default function Settings() {
                 type="button"
                 id="toggle-auto-post"
                 onClick={() => setForm((f) => ({ ...f, autoPostComments: !f.autoPostComments }))}
+                className="focus:outline-none transition-transform hover:scale-105 active:scale-95"
               >
                 {form.autoPostComments ? (
-                  <ToggleRight size={32} className="text-brand-400" />
+                  <ToggleRight size={44} className="text-brand-500" />
                 ) : (
-                  <ToggleLeft size={32} className="text-white/20" />
+                  <ToggleLeft size={44} className="text-surface-500" />
                 )}
               </button>
             </div>
           </div>
 
           {/* Save */}
-          <div className="flex items-center gap-3">
-            <button id="btn-save-settings" type="submit" disabled={mutation.isPending} className="btn-primary">
+          <div className="flex items-center gap-4 pt-4 border-t border-surface-700/50">
+            <button id="btn-save-settings" type="submit" disabled={mutation.isPending} className="btn-primary h-12 px-8 text-base">
               {mutation.isPending ? (
-                <><RefreshCw size={15} className="animate-spin" /> Saving...</>
+                <><RefreshCw size={18} className="animate-spin" /> Saving...</>
               ) : (
-                <><Save size={15} /> Save Settings</>
+                <><Save size={18} /> Save Settings</>
               )}
             </button>
 
             {saveSuccess && (
-              <span className="flex items-center gap-1.5 text-sm text-emerald-400 animate-fade-in">
-                <CheckCircle size={15} /> Saved!
+              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600 animate-fade-in bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
+                <CheckCircle size={16} /> Saved Successfully!
               </span>
             )}
             {mutation.isError && (
-              <span className="flex items-center gap-1.5 text-sm text-red-400 animate-fade-in">
-                <AlertCircle size={15} />
+              <span className="flex items-center gap-2 text-sm font-semibold text-red-600 animate-fade-in bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
+                <AlertCircle size={16} />
                 {mutation.error?.response?.data?.message || 'Save failed'}
               </span>
             )}
@@ -221,3 +224,4 @@ export default function Settings() {
     </main>
   );
 }
+

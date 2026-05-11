@@ -18,53 +18,53 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-surface-900/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-surface-700/50 shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-900/50">
-            <Bot size={16} className="text-white" />
+        <div className="flex items-center gap-2.5 shrink-0 group cursor-pointer" onClick={() => navigate('/')}>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/30 transform transition-transform group-hover:scale-105 group-hover:rotate-3">
+            <Bot size={20} className="text-white" />
           </div>
-          <span className="font-bold text-white text-sm tracking-tight hidden sm:block">
-            Review<span className="text-brand-400">Agent</span>
+          <span className="font-extrabold text-text-main text-lg tracking-tight hidden sm:block">
+            Review<span className="text-brand-500">Agent</span>
           </span>
         </div>
 
         {/* Nav links */}
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-2">
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
               id={`nav-${label.toLowerCase()}`}
               className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   isActive
-                    ? 'bg-brand-600/20 text-brand-400'
-                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                    ? 'bg-brand-50 text-brand-600 shadow-sm'
+                    : 'text-text-muted hover:text-text-main hover:bg-surface-800'
                 }`
               }
             >
-              <Icon size={15} />
+              <Icon size={16} />
               <span className="hidden sm:block">{label}</span>
             </NavLink>
           ))}
         </nav>
 
         {/* User + logout */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden md:flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="hidden md:flex items-center gap-2.5 bg-surface-800/50 px-3 py-1.5 rounded-full border border-surface-700/50">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-400 to-rose-400 flex items-center justify-center text-xs font-bold text-white shadow-sm">
               {user?.username?.[0]?.toUpperCase() || '?'}
             </div>
-            <span className="text-sm text-white/60 font-medium">{user?.username}</span>
+            <span className="text-sm text-text-main font-semibold">{user?.username}</span>
           </div>
           <button
             id="btn-logout"
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-text-muted hover:text-red-600 hover:bg-red-50 transition-all duration-300"
           >
-            <LogOut size={14} />
+            <LogOut size={16} />
             <span className="hidden sm:block">Logout</span>
           </button>
         </div>
@@ -72,3 +72,4 @@ export default function Navbar() {
     </header>
   );
 }
+
