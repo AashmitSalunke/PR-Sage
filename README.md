@@ -16,6 +16,41 @@ React (Vite)  ──REST/SSE──►  Express/Node.js  ──Mongoose──► 
 
 ---
 
+# 📸 Project Screenshots
+
+## 1. Dashboard / Home Page
+
+<img width="1917" height="876" alt="image" src="https://github.com/user-attachments/assets/b8a9ee97-8ba2-4977-b230-c459dd5481cd" />
+
+
+## 2. GitHub Pull Request Review
+
+<img width="1917" height="882" alt="image" src="https://github.com/user-attachments/assets/a759e4e0-21f3-48c4-bb31-e3794b31a8c2" />
+
+
+
+
+## 3. AI Review Streaming (SSE)
+
+<img width="1917" height="862" alt="image" src="https://github.com/user-attachments/assets/806f69fd-41c9-46ee-831e-456a11416386" />
+
+
+## 4. Inline GitHub Comments
+<img width="410" height="357" alt="image" src="https://github.com/user-attachments/assets/c1077a57-864b-4ffc-80c1-f2614b0ca676" />
+
+
+
+
+## 5. Review History
+
+<img width="1917" height="877" alt="image" src="https://github.com/user-attachments/assets/b199fd85-235e-46e2-916f-1825a9a8eec1" />
+
+
+## 6. User Settings
+
+<img width="1917" height="877" alt="image" src="https://github.com/user-attachments/assets/bfbad888-8805-46ce-a83a-53455b6f6a79" />
+
+
 ## Prerequisites
 
 | Tool | Version |
@@ -89,7 +124,7 @@ See `.env` for the full list. Key variables:
 
 ## Project Structure
 
-```
+```text
 review-agent/
 ├── client/          # React + Vite frontend
 ├── server/          # Express + Node.js backend
