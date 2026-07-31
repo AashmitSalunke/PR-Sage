@@ -3,7 +3,10 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+dotenv.config({ path: join(__dirname, '.env') });
 dotenv.config({ path: join(__dirname, '..', '.env') });
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -34,13 +37,24 @@ const allowedOrigins = (process.env.CLIENT_URL || defaultAllowedOrigins.join(','
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
 
-  const normalizedOrigin = origin.replace(/\/$/, '');
+  try {
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    const { hostname, origin: parsedOrigin } = new URL(normalizedOrigin);
 
-  if (allowedOrigins.includes(normalizedOrigin)) return true;
+    if (allowedOrigins.includes(normalizedOrigin) || allowedOrigins.includes(parsedOrigin)) {
+      return true;
+    }
 
-  return /^http:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d+\.\d+):5173$/.test(
-    normalizedOrigin
-  );
+    if (hostname.endsWith('.netlify.app') || hostname === 'netlify.app') {
+      return true;
+    }
+
+    return /^http:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d+\.\d+):5173$/.test(
+      normalizedOrigin
+    );
+  } catch {
+    return false;
+  }
 };
 
 // ── Connect to MongoDB ────────────────────────────────────────────────────────

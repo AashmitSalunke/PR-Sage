@@ -5,7 +5,12 @@ const RETRY_DELAY_MS = 3000;
 
 const connectDB = async (attempt = 1) => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+    if (!mongoUri) {
+      throw new Error('Missing MONGO_URI environment variable');
+    }
+
+    const conn = await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 5000,
     });
     console.log(`✅ MongoDB connected: ${conn.connection.host}`);

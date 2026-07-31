@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import CommentList from '../components/CommentList.jsx';
 import { GitPullRequest, Send, Zap, AlertCircle, CheckCircle, ChevronDown, Sparkles } from 'lucide-react';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 
 export default function Dashboard() {
   const { user, token } = useAuth();
