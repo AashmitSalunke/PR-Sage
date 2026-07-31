@@ -94,6 +94,46 @@ npm run dev      # Vite (port 5173)
 
 ---
 
+## Deploy to Netlify
+
+This project is split into a frontend and backend:
+
+- Frontend: Netlify static site
+- Backend: separate Node/Express host such as Render, Railway, or another VPS
+
+### Netlify frontend setup
+
+1. Import this repo into Netlify.
+2. Set the build command:
+
+```bash
+cd client && npm install && npm run build
+```
+
+3. Set the publish directory to:
+
+```bash
+client/dist
+```
+
+4. Add the environment variable in Netlify:
+
+```bash
+VITE_API_BASE_URL=https://your-backend-url.example.com/api
+```
+
+5. Make sure your backend allows the Netlify domain in `CLIENT_URL`:
+
+```bash
+CLIENT_URL=https://your-app-name.netlify.app
+```
+
+The project already includes the Netlify rewrite config in `netlify.toml`.
+
+---
+
+---
+
 ## API Reference
 
 | Method | Endpoint | Description |
