@@ -19,10 +19,29 @@ import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express();
 
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://0.0.0.0:5173',
+  'http://192.168.1.38:5173',
+];
+
+const allowedOrigins = (process.env.CLIENT_URL || defaultAllowedOrigins.join(','))
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+
+  const normalizedOrigin = origin.replace(/\/$/, '');
+
+  if (allowedOrigins.includes(normalizedOrigin)) return true;
+
+  return /^http:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d+\.\d+):5173$/.test(
+    normalizedOrigin
+  );
+};
 
 // ── Connect to MongoDB ────────────────────────────────────────────────────────
 connectDB();
@@ -32,7 +51,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
@@ -94,8 +113,9 @@ app.use(errorMiddleware);
 
 // ── Start server ──────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server also listening on http://192.168.1.38:${PORT}`);
   console.log(`   Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 

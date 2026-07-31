@@ -6,20 +6,17 @@ import {
   Save, CheckCircle, AlertCircle, Eye, EyeOff, RefreshCw, ExternalLink,
 } from 'lucide-react';
 
+const DEFAULT_GEMINI_MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash';
+
 const GEMINI_MODELS = [
-  { id: 'gemini-3-flash-preview',          label: 'Gemini 3 Flash Preview',       desc: '⭐ Default — latest & fastest preview' },
-  { id: 'gemini-2.5-flash-preview-04-17',  label: 'Gemini 2.5 Flash Preview',     desc: 'Strong reasoning, very fast' },
-  { id: 'gemini-2.5-pro-preview-03-25',    label: 'Gemini 2.5 Pro Preview',       desc: 'Highest quality, higher quota cost' },
-  { id: 'gemini-2.0-flash',               label: 'Gemini 2.0 Flash',             desc: 'Stable, fast' },
-  { id: 'gemini-1.5-flash',               label: 'Gemini 1.5 Flash',             desc: 'Reliable, free tier friendly' },
-  { id: 'gemini-1.5-pro',                 label: 'Gemini 1.5 Pro',               desc: 'Best quality in 1.5 series' },
+  { id: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash', desc: 'Using your Gemini API key from .env' },
 ];
 
 export default function Settings() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     githubToken: '',
-    geminiModel: 'gemini-3-flash-preview',
+    geminiModel: DEFAULT_GEMINI_MODEL,
     autoPostComments: false,
   });
   const [showToken, setShowToken] = useState(false);
@@ -85,16 +82,7 @@ export default function Settings() {
               Gemini AI Model
             </h2>
             <p className="text-text-muted text-sm mb-5 leading-relaxed">
-              Powered by Google Gemini API. Get your key at{' '}
-              <a
-                href="https://aistudio.google.com/app/apikey"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand-500 font-semibold hover:text-brand-600 inline-flex items-center gap-1 transition-colors"
-              >
-                aistudio.google.com <ExternalLink size={12} />
-              </a>
-              . The API key is set in your server's <code className="bg-surface-800 border border-surface-700 px-1.5 py-0.5 rounded text-text-muted font-mono text-xs">.env</code> file.
+              Using the Gemini model configured in your <code className="bg-surface-800 border border-surface-700 px-1.5 py-0.5 rounded text-text-muted font-mono text-xs">.env</code> file.
             </p>
 
             <div className="space-y-3">
