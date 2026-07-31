@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 import CommentList from '../components/CommentList.jsx';
 import { GitPullRequest, Send, Zap, AlertCircle, CheckCircle, ChevronDown, Sparkles } from 'lucide-react';
 
-const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
+const BASE_URL = (import.meta.env.VITE_API_URL || '').trim();
+const API_BASE_URL = BASE_URL ? `${BASE_URL.replace(/\/$/, '')}/api` : '/api';
 
 export default function Dashboard() {
   const { user, token } = useAuth();
@@ -49,7 +50,7 @@ export default function Dashboard() {
 
     // Use fetch for SSE with auth header (EventSource doesn't support headers)
     try {
-      const response = await fetch(`${BASE_URL}/reviews`, {
+      const response = await fetch(`${API_BASE_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
