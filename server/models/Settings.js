@@ -53,7 +53,7 @@ const settingsSchema = new mongoose.Schema(
     },
     geminiModel: {
       type: String,
-      default: process.env.GROK_MODEL || 'grok-2-latest',
+      default: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
     },
     autoPostComments: {
       type: Boolean,

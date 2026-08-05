@@ -6,13 +6,13 @@ import {
   Save, CheckCircle, AlertCircle, Eye, EyeOff, RefreshCw, ExternalLink,
 } from 'lucide-react';
 
-const DEFAULT_GROK_MODEL = import.meta.env.VITE_GROK_MODEL || 'grok-2-latest';
+const DEFAULT_GROQ_MODEL = import.meta.env.VITE_GROQ_MODEL || 'llama-3.3-70b-versatile';
 
 export default function Settings() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     githubToken: '',
-    geminiModel: DEFAULT_GROK_MODEL,
+    geminiModel: DEFAULT_GROQ_MODEL,
     autoPostComments: false,
   });
   const [showToken, setShowToken] = useState(false);
@@ -27,7 +27,7 @@ export default function Settings() {
     if (data) {
       setForm((prev) => ({
         ...prev,
-        geminiModel: data.geminiModel || 'grok-2-latest',
+        geminiModel: data.geminiModel || 'llama-3.3-70b-versatile',
         autoPostComments: data.autoPostComments ?? false,
         githubToken: '',
       }));
@@ -63,7 +63,7 @@ export default function Settings() {
         <h1 className="section-title">
           Settings
         </h1>
-        <p className="section-subtitle text-lg">Configure your GitHub token and Grok AI model</p>
+        <p className="section-subtitle text-lg">Configure your GitHub token and Groq AI model</p>
       </div>
 
       {isLoading ? (
@@ -75,10 +75,10 @@ export default function Settings() {
           <div className="card border-t-4 border-t-brand-400">
             <h2 className="font-bold text-text-main flex items-center gap-2 mb-2 text-lg">
               <Sparkles size={20} className="text-brand-500" />
-              Grok Model
+              Groq Model
             </h2>
             <p className="text-text-muted text-sm mb-5 leading-relaxed">
-              Using the default Grok model configured in the server environment: <span className="font-semibold text-text-main">grok-2-latest</span>
+              Using the default Groq model configured in the server environment: <span className="font-semibold text-text-main">llama-3.3-70b-versatile</span>
             </p>
 
             <div className="rounded-2xl border border-surface-700 bg-surface-900/40 p-4">

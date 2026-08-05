@@ -1,13 +1,13 @@
-const GROK_BASE_URL = 'https://api.x.ai/v1/chat/completions';
+const GROQ_BASE_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-const getSelectedModel = (model) => model || process.env.GROK_MODEL || 'grok-2-latest';
+const getSelectedModel = (model) => model || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
-const createGrokHeaders = (apiKey) => ({
+const createGroqHeaders = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
   'Content-Type': 'application/json',
 });
 
-const parseGrokStreamChunk = (chunkText) => {
+const parseGroqStreamChunk = (chunkText) => {
   if (!chunkText) return '';
 
   const lines = chunkText
@@ -39,17 +39,17 @@ const parseGrokStreamChunk = (chunkText) => {
 };
 
 /**
- * Stream a review from Grok using the xAI chat completion API.
+ * Stream a review from Groq using the Groq chat completion API.
  */
 export async function* streamReview(prompt, model, apiKey) {
-  const key = apiKey || process.env.GROK_API_KEY;
+  const key = apiKey || process.env.GROQ_API_KEY;
   if (!key) {
-    throw new Error('GROK_API_KEY not set in the server environment.');
+    throw new Error('GROQ_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(GROK_BASE_URL, {
+  const response = await fetch(GROQ_BASE_URL, {
     method: 'POST',
-    headers: createGrokHeaders(key),
+    headers: createGroqHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -60,12 +60,12 @@ export async function* streamReview(prompt, model, apiKey) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Grok request failed: ${response.status} ${errorText}`);
+    throw new Error(`Groq request failed: ${response.status} ${errorText}`);
   }
 
   const reader = response.body?.getReader();
   if (!reader) {
-    throw new Error('Grok stream did not return a readable body.');
+    throw new Error('Groq stream did not return a readable body.');
   }
 
   const decoder = new TextDecoder();
@@ -76,7 +76,7 @@ export async function* streamReview(prompt, model, apiKey) {
     if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-    const chunkText = parseGrokStreamChunk(buffer);
+    const chunkText = parseGroqStreamChunk(buffer);
     if (chunkText) {
       yield chunkText;
     }
@@ -84,24 +84,24 @@ export async function* streamReview(prompt, model, apiKey) {
     buffer = '';
   }
 
-  const finalChunk = parseGrokStreamChunk(buffer);
+  const finalChunk = parseGroqStreamChunk(buffer);
   if (finalChunk) {
     yield finalChunk;
   }
 }
 
 /**
- * One-shot (non-streaming) Grok call.
+ * One-shot (non-streaming) Groq call.
  */
 export const generateReview = async (prompt, model, apiKey) => {
-  const key = apiKey || process.env.GROK_API_KEY;
+  const key = apiKey || process.env.GROQ_API_KEY;
   if (!key) {
-    throw new Error('GROK_API_KEY not set in the server environment.');
+    throw new Error('GROQ_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(GROK_BASE_URL, {
+  const response = await fetch(GROQ_BASE_URL, {
     method: 'POST',
-    headers: createGrokHeaders(key),
+    headers: createGroqHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -111,7 +111,7 @@ export const generateReview = async (prompt, model, apiKey) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Grok request failed: ${response.status} ${errorText}`);
+    throw new Error(`Groq request failed: ${response.status} ${errorText}`);
   }
 
   const json = await response.json();
@@ -119,6 +119,6 @@ export const generateReview = async (prompt, model, apiKey) => {
 };
 
 /**
- * Grok model list intentionally kept to a single default model.
+ * Groq model list intentionally kept to a single default model.
  */
-export const listModels = () => ['grok-2-latest'];
+export const listModels = () => ['llama-3.3-70b-versatile'];
