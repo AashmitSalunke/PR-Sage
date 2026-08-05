@@ -41,7 +41,7 @@ export const startReview = async (req, res, next) => {
       return res.end();
     }
 
-    const model = settings.geminiModel || process.env.OPENROUTER_DEFAULT_MODEL || 'openai/gpt-4o-mini';
+    const model = settings.geminiModel || process.env.OPENROUTER_DEFAULT_MODEL || 'moonshotai/kimi-k2.5';
     const openRouterApiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
     if (!openRouterApiKey) {
       send('error', { message: 'OPENROUTER_API_KEY not set in server environment.' });

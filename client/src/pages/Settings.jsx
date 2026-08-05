@@ -6,9 +6,10 @@ import {
   Save, CheckCircle, AlertCircle, Eye, EyeOff, RefreshCw, ExternalLink,
 } from 'lucide-react';
 
-const DEFAULT_OPENROUTER_MODEL = import.meta.env.VITE_OPENROUTER_MODEL || 'openai/gpt-4o-mini';
+const DEFAULT_OPENROUTER_MODEL = import.meta.env.VITE_OPENROUTER_MODEL || 'moonshotai/kimi-k2.5';
 
 const OPENROUTER_MODELS = [
+  { id: 'moonshotai/kimi-k2.5', label: 'Moonshot Kimi K2.5', desc: 'Your default OpenRouter model' },
   { id: 'openai/gpt-4o-mini', label: 'OpenAI GPT-4o Mini', desc: 'Fast and reliable default model' },
   { id: 'openai/gpt-4.1-mini', label: 'OpenAI GPT-4.1 Mini', desc: 'Good balance of cost and quality' },
   { id: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet', desc: 'Strong reasoning and code review quality' },
@@ -78,14 +79,14 @@ export default function Settings() {
       ) : (
         <form id="form-settings" onSubmit={handleSubmit} className="space-y-8 animate-slide-up">
 
-          {/* Gemini AI Configuration */}
+          {/* AI Model Configuration */}
           <div className="card border-t-4 border-t-brand-400">
             <h2 className="font-bold text-text-main flex items-center gap-2 mb-2 text-lg">
               <Sparkles size={20} className="text-brand-500" />
-              OpenRouter AI Model
+              AI Model
             </h2>
             <p className="text-text-muted text-sm mb-5 leading-relaxed">
-              Using the OpenRouter model configured in your server environment.
+              Select the model you want to use through OpenRouter. The default is Moonshot Kimi K2.5.
             </p>
 
             <div className="space-y-3">
@@ -170,7 +171,7 @@ export default function Settings() {
               <div>
                 <p className="text-base font-bold text-text-main">Auto-post comments to GitHub</p>
                 <p className="text-sm text-text-muted mt-0.5">
-                  Automatically post Gemini review comments after every review
+                  Automatically post AI review comments after every review
                 </p>
               </div>
               <button

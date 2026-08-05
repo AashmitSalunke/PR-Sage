@@ -1,7 +1,7 @@
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 const getSelectedModel = (model) =>
-  model || process.env.OPENROUTER_DEFAULT_MODEL || process.env.GEMINI_DEFAULT_MODEL || 'openai/gpt-4o-mini';
+  model || process.env.OPENROUTER_DEFAULT_MODEL || process.env.GEMINI_DEFAULT_MODEL || 'moonshotai/kimi-k2.5';
 
 const createOpenRouterHeaders = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
