@@ -1,5 +1,5 @@
 import Settings from '../models/Settings.js';
- DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
 /**
  * GET /api/settings
