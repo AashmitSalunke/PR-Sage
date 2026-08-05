@@ -27,7 +27,7 @@ export default function Settings() {
     if (data) {
       setForm((prev) => ({
         ...prev,
-        geminiModel: data.geminiModel || 'llama-3.3-70b-versatile',
+        geminiModel: DEFAULT_GROQ_MODEL,
         autoPostComments: data.autoPostComments ?? false,
         githubToken: '',
       }));

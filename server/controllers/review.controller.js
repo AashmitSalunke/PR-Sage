@@ -41,7 +41,9 @@ export const startReview = async (req, res, next) => {
       return res.end();
     }
 
-    const model = settings.geminiModel || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+    // Do not use legacy per-user provider settings; Groq model selection is
+    // configured centrally in the server environment.
+    const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
       send('error', { message: 'GROQ_API_KEY not set in server environment.' });
