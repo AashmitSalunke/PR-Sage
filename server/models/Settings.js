@@ -53,7 +53,7 @@ const settingsSchema = new mongoose.Schema(
     },
     geminiModel: {
       type: String,
-      default: process.env.GEMINI_DEFAULT_MODEL || 'gemini-3-flash-preview',
+      default: process.env.OPENROUTER_DEFAULT_MODEL || process.env.GEMINI_DEFAULT_MODEL || 'openai/gpt-4o-mini',
     },
     autoPostComments: {
       type: Boolean,

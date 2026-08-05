@@ -41,10 +41,10 @@ export const startReview = async (req, res, next) => {
       return res.end();
     }
 
-    const model = settings.geminiModel || 'gemini-1.5-flash';
-    const geminiApiKey = process.env.GEMINI_API_KEY;
-    if (!geminiApiKey) {
-      send('error', { message: 'GEMINI_API_KEY not set in server .env file.' });
+    const model = settings.geminiModel || process.env.OPENROUTER_DEFAULT_MODEL || 'openai/gpt-4o-mini';
+    const openRouterApiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
+    if (!openRouterApiKey) {
+      send('error', { message: 'OPENROUTER_API_KEY not set in server environment.' });
       return res.end();
     }
 
@@ -90,7 +90,7 @@ export const startReview = async (req, res, next) => {
       const prompt = buildReviewPrompt(pr.title, pr.body, chunks[i], i, chunks.length);
 
       let fullResponse = '';
-      for await (const token of streamReview(prompt, model, geminiApiKey)) {
+      for await (const token of streamReview(prompt, model, openRouterApiKey)) {
         fullResponse += token;
         send('token', { chunk: i, token });
       }
