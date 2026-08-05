@@ -41,10 +41,10 @@ export const startReview = async (req, res, next) => {
       return res.end();
     }
 
-    const model = settings.geminiModel || process.env.OPENROUTER_DEFAULT_MODEL || 'moonshotai/kimi-k2.5';
-    const openRouterApiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
-    if (!openRouterApiKey) {
-      send('error', { message: 'OPENROUTER_API_KEY not set in server environment.' });
+    const model = settings.geminiModel || process.env.GROK_MODEL || 'grok-2-latest';
+    const grokApiKey = process.env.GROK_API_KEY;
+    if (!grokApiKey) {
+      send('error', { message: 'GROK_API_KEY not set in server environment.' });
       return res.end();
     }
 
@@ -90,7 +90,7 @@ export const startReview = async (req, res, next) => {
       const prompt = buildReviewPrompt(pr.title, pr.body, chunks[i], i, chunks.length);
 
       let fullResponse = '';
-      for await (const token of streamReview(prompt, model, openRouterApiKey)) {
+      for await (const token of streamReview(prompt, model, grokApiKey)) {
         fullResponse += token;
         send('token', { chunk: i, token });
       }

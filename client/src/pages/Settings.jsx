@@ -6,21 +6,13 @@ import {
   Save, CheckCircle, AlertCircle, Eye, EyeOff, RefreshCw, ExternalLink,
 } from 'lucide-react';
 
-const DEFAULT_OPENROUTER_MODEL = import.meta.env.VITE_OPENROUTER_MODEL || 'moonshotai/kimi-k2.5';
-
-const OPENROUTER_MODELS = [
-  { id: 'moonshotai/kimi-k2.5', label: 'Moonshot Kimi K2.5', desc: 'Your default OpenRouter model' },
-  { id: 'openai/gpt-4o-mini', label: 'OpenAI GPT-4o Mini', desc: 'Fast and reliable default model' },
-  { id: 'openai/gpt-4.1-mini', label: 'OpenAI GPT-4.1 Mini', desc: 'Good balance of cost and quality' },
-  { id: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet', desc: 'Strong reasoning and code review quality' },
-  { id: 'google/gemini-2.0-flash-001', label: 'Gemini 2.0 Flash', desc: 'Google model via OpenRouter' },
-];
+const DEFAULT_GROK_MODEL = import.meta.env.VITE_GROK_MODEL || 'grok-2-latest';
 
 export default function Settings() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
     githubToken: '',
-    geminiModel: DEFAULT_OPENROUTER_MODEL,
+    geminiModel: DEFAULT_GROK_MODEL,
     autoPostComments: false,
   });
   const [showToken, setShowToken] = useState(false);
@@ -35,7 +27,7 @@ export default function Settings() {
     if (data) {
       setForm((prev) => ({
         ...prev,
-        geminiModel: data.geminiModel || 'openai/gpt-4o-mini',
+        geminiModel: data.geminiModel || 'grok-2-latest',
         autoPostComments: data.autoPostComments ?? false,
         githubToken: '',
       }));
@@ -71,7 +63,7 @@ export default function Settings() {
         <h1 className="section-title">
           Settings
         </h1>
-        <p className="section-subtitle text-lg">Configure your GitHub token and OpenRouter AI model</p>
+        <p className="section-subtitle text-lg">Configure your GitHub token and Grok AI model</p>
       </div>
 
       {isLoading ? (
@@ -83,38 +75,15 @@ export default function Settings() {
           <div className="card border-t-4 border-t-brand-400">
             <h2 className="font-bold text-text-main flex items-center gap-2 mb-2 text-lg">
               <Sparkles size={20} className="text-brand-500" />
-              AI Model
+              Grok Model
             </h2>
             <p className="text-text-muted text-sm mb-5 leading-relaxed">
-              Select the model you want to use through OpenRouter. The default is Moonshot Kimi K2.5.
+              Using the default Grok model configured in the server environment: <span className="font-semibold text-text-main">grok-2-latest</span>
             </p>
 
-            <div className="space-y-3">
-              {OPENROUTER_MODELS.map((m) => (
-                <label
-                  key={m.id}
-                  htmlFor={`model-${m.id}`}
-                  className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
-                    form.geminiModel === m.id
-                      ? 'border-brand-300 bg-brand-50 shadow-sm'
-                      : 'border-surface-700 hover:border-surface-600 hover:bg-surface-800 hover:shadow-sm'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    id={`model-${m.id}`}
-                    name="geminiModel"
-                    value={m.id}
-                    checked={form.geminiModel === m.id}
-                    onChange={(e) => setForm((f) => ({ ...f, geminiModel: e.target.value }))}
-                    className="w-5 h-5 accent-brand-500 text-brand-500 focus:ring-brand-500"
-                  />
-                  <div>
-                    <p className={`text-base font-bold ${form.geminiModel === m.id ? 'text-brand-700' : 'text-text-main'}`}>{m.label}</p>
-                    <p className={`text-sm ${form.geminiModel === m.id ? 'text-brand-600/80' : 'text-text-muted'}`}>{m.desc}</p>
-                  </div>
-                </label>
-              ))}
+            <div className="rounded-2xl border border-surface-700 bg-surface-900/40 p-4">
+              <p className="text-sm text-text-muted">Current model</p>
+              <p className="mt-1 text-lg font-bold text-text-main">{form.geminiModel}</p>
             </div>
           </div>
 

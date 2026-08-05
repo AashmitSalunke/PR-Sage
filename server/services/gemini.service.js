@@ -1,16 +1,13 @@
-const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const GROK_BASE_URL = 'https://api.x.ai/v1/chat/completions';
 
-const getSelectedModel = (model) =>
-  model || process.env.OPENROUTER_DEFAULT_MODEL || process.env.GEMINI_DEFAULT_MODEL || 'moonshotai/kimi-k2.5';
+const getSelectedModel = (model) => model || process.env.GROK_MODEL || 'grok-2-latest';
 
-const createOpenRouterHeaders = (apiKey) => ({
+const createGrokHeaders = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
   'Content-Type': 'application/json',
-  'HTTP-Referer': process.env.CLIENT_URL || 'http://localhost:5173',
-  'X-Title': 'Review Agent',
 });
 
-const parseOpenRouterStreamChunk = (chunkText) => {
+const parseGrokStreamChunk = (chunkText) => {
   if (!chunkText) return '';
 
   const lines = chunkText
@@ -42,23 +39,17 @@ const parseOpenRouterStreamChunk = (chunkText) => {
 };
 
 /**
- * Stream a review from OpenRouter using a chat-completions request.
- * Yields text chunks as they arrive.
- *
- * @param {string} prompt
- * @param {string} model
- * @param {string} apiKey
- * @returns {AsyncGenerator<string>}
+ * Stream a review from Grok using the xAI chat completion API.
  */
 export async function* streamReview(prompt, model, apiKey) {
-  const key = apiKey || process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
+  const key = apiKey || process.env.GROK_API_KEY;
   if (!key) {
-    throw new Error('OPENROUTER_API_KEY not set in the server environment.');
+    throw new Error('GROK_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(OPENROUTER_BASE_URL, {
+  const response = await fetch(GROK_BASE_URL, {
     method: 'POST',
-    headers: createOpenRouterHeaders(key),
+    headers: createGrokHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -69,12 +60,12 @@ export async function* streamReview(prompt, model, apiKey) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`OpenRouter request failed: ${response.status} ${errorText}`);
+    throw new Error(`Grok request failed: ${response.status} ${errorText}`);
   }
 
   const reader = response.body?.getReader();
   if (!reader) {
-    throw new Error('OpenRouter stream did not return a readable body.');
+    throw new Error('Grok stream did not return a readable body.');
   }
 
   const decoder = new TextDecoder();
@@ -85,7 +76,7 @@ export async function* streamReview(prompt, model, apiKey) {
     if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-    const chunkText = parseOpenRouterStreamChunk(buffer);
+    const chunkText = parseGrokStreamChunk(buffer);
     if (chunkText) {
       yield chunkText;
     }
@@ -93,24 +84,24 @@ export async function* streamReview(prompt, model, apiKey) {
     buffer = '';
   }
 
-  const finalChunk = parseOpenRouterStreamChunk(buffer);
+  const finalChunk = parseGrokStreamChunk(buffer);
   if (finalChunk) {
     yield finalChunk;
   }
 }
 
 /**
- * One-shot (non-streaming) OpenRouter call.
+ * One-shot (non-streaming) Grok call.
  */
 export const generateReview = async (prompt, model, apiKey) => {
-  const key = apiKey || process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
+  const key = apiKey || process.env.GROK_API_KEY;
   if (!key) {
-    throw new Error('OPENROUTER_API_KEY not set in the server environment.');
+    throw new Error('GROK_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(OPENROUTER_BASE_URL, {
+  const response = await fetch(GROK_BASE_URL, {
     method: 'POST',
-    headers: createOpenRouterHeaders(key),
+    headers: createGrokHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -120,7 +111,7 @@ export const generateReview = async (prompt, model, apiKey) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`OpenRouter request failed: ${response.status} ${errorText}`);
+    throw new Error(`Grok request failed: ${response.status} ${errorText}`);
   }
 
   const json = await response.json();
@@ -128,13 +119,6 @@ export const generateReview = async (prompt, model, apiKey) => {
 };
 
 /**
- * List available OpenRouter-compatible models.
+ * Grok model list intentionally kept to a single default model.
  */
-export const listModels = () => [
-  'openai/gpt-4o-mini',
-  'openai/gpt-4.1-mini',
-  'anthropic/claude-3.5-sonnet',
-  'anthropic/claude-3.5-haiku',
-  'google/gemini-2.0-flash-001',
-  'meta-llama/llama-3.1-8b-instruct',
-];
+export const listModels = () => ['grok-2-latest'];

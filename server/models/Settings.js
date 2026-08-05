@@ -53,7 +53,7 @@ const settingsSchema = new mongoose.Schema(
     },
     geminiModel: {
       type: String,
-      default: process.env.OPENROUTER_DEFAULT_MODEL || process.env.GEMINI_DEFAULT_MODEL || 'moonshotai/kimi-k2.5',
+      default: process.env.GROK_MODEL || 'grok-2-latest',
     },
     autoPostComments: {
       type: Boolean,
