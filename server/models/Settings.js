@@ -53,7 +53,7 @@ const settingsSchema = new mongoose.Schema(
     },
     geminiModel: {
       type: String,
-      default: process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1',
+      default: process.env.NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b',
     },
     autoPostComments: {
       type: Boolean,

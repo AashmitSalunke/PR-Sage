@@ -6,7 +6,7 @@ import {
   Save, CheckCircle, AlertCircle, Eye, EyeOff, RefreshCw, ExternalLink,
 } from 'lucide-react';
 
-const DEFAULT_NEMOTRON_MODEL = import.meta.env.VITE_NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
+const DEFAULT_NEMOTRON_MODEL = import.meta.env.VITE_NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b';
 
 export default function Settings() {
   const queryClient = useQueryClient();
@@ -78,7 +78,7 @@ export default function Settings() {
               Nemotron Model
             </h2>
             <p className="text-text-muted text-sm mb-5 leading-relaxed">
-              Using the default Nemotron model configured in the server environment: <span className="font-semibold text-text-main">nvidia/llama-3.1-nemotron-ultra-253b-v1</span>
+              Using the default Nemotron model configured in the server environment: <span className="font-semibold text-text-main">nvidia/nemotron-3-nano-30b-a3b</span>
             </p>
 
             <div className="rounded-2xl border border-surface-700 bg-surface-900/40 p-4">

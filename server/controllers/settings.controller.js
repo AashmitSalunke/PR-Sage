@@ -1,5 +1,5 @@
 import Settings from '../models/Settings.js';
-const DEFAULT_NEMOTRON_MODEL = process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
+const DEFAULT_NEMOTRON_MODEL = process.env.NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b';
 
 /**
  * GET /api/settings

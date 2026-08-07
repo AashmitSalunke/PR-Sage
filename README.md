@@ -161,7 +161,7 @@ See `.env` for the full list. Key variables:
 - `JWT_SECRET` — Secret for signing JWTs (min 32 chars)
 - `ENCRYPTION_KEY` — 32-char key for encrypting GitHub tokens in DB
 - `NEMOTRON_API_KEY` — NVIDIA API key for Nemotron
-- `NEMOTRON_BASE_URL` — OpenAI-compatible Nemotron endpoint
+- `NEMOTRON_BASE_URL` — OpenRouter chat completions endpoint
 - `NEMOTRON_MODEL` — Nemotron model identifier
 
 ---

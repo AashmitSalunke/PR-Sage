@@ -1,10 +1,12 @@
-const NEMOTRON_BASE_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const NEMOTRON_BASE_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-const getSelectedModel = (model) => model || process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
+const getSelectedModel = (model) => model || process.env.NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b';
 
 const createNemotronHeaders = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
   'Content-Type': 'application/json',
+  'HTTP-Referer': process.env.CLIENT_URL || 'http://localhost:5173',
+  'X-Title': 'PR Sage',
 });
 
 const parseNemotronStreamChunk = (chunkText) => {

@@ -43,7 +43,7 @@ export const startReview = async (req, res, next) => {
 
     // Do not use legacy per-user provider settings; Nemotron model selection is
     // configured centrally in the server environment.
-    const model = process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
+    const model = process.env.NEMOTRON_MODEL || 'nvidia/nemotron-3-nano-30b-a3b';
     const nemotronApiKey = process.env.NEMOTRON_API_KEY;
     if (!nemotronApiKey) {
       send('error', { message: 'NEMOTRON_API_KEY not set in server environment.' });
