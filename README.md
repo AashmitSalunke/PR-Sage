@@ -157,10 +157,12 @@ The project already includes the Netlify rewrite config in `netlify.toml`.
 
 See `.env` for the full list. Key variables:
 
-- `MONGODB_URI` — MongoDB connection string
+- `MONGO_URI` — MongoDB connection string
 - `JWT_SECRET` — Secret for signing JWTs (min 32 chars)
 - `ENCRYPTION_KEY` — 32-char key for encrypting GitHub tokens in DB
-- `GEMINI_API_KEY` — Google Gemini API key
+- `NEMOTRON_API_KEY` — NVIDIA API key for Nemotron
+- `NEMOTRON_BASE_URL` — OpenAI-compatible Nemotron endpoint
+- `NEMOTRON_MODEL` — Nemotron model identifier
 
 ---
 

@@ -41,12 +41,12 @@ export const startReview = async (req, res, next) => {
       return res.end();
     }
 
-    // Do not use legacy per-user provider settings; Groq model selection is
+    // Do not use legacy per-user provider settings; Nemotron model selection is
     // configured centrally in the server environment.
-    const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
-    const groqApiKey = process.env.GROQ_API_KEY;
-    if (!groqApiKey) {
-      send('error', { message: 'GROQ_API_KEY not set in server environment.' });
+    const model = process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
+    const nemotronApiKey = process.env.NEMOTRON_API_KEY;
+    if (!nemotronApiKey) {
+      send('error', { message: 'NEMOTRON_API_KEY not set in server environment.' });
       return res.end();
     }
 
@@ -92,7 +92,7 @@ export const startReview = async (req, res, next) => {
       const prompt = buildReviewPrompt(pr.title, pr.body, chunks[i], i, chunks.length);
 
       let fullResponse = '';
-      for await (const token of streamReview(prompt, model, groqApiKey)) {
+      for await (const token of streamReview(prompt, model, nemotronApiKey)) {
         fullResponse += token;
         send('token', { chunk: i, token });
       }

@@ -1,5 +1,5 @@
 import Settings from '../models/Settings.js';
-const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const DEFAULT_NEMOTRON_MODEL = process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
 
 /**
  * GET /api/settings
@@ -11,9 +11,9 @@ export const getSettings = async (req, res, next) => {
     // Auto-create settings if somehow missing
     if (!settings) {
       settings = await Settings.create({ userId: req.user._id });
-    } else if (settings.geminiModel !== DEFAULT_GROQ_MODEL) {
+    } else if (settings.geminiModel !== DEFAULT_NEMOTRON_MODEL) {
       // Migrate models saved while Gemini, OpenRouter, or Grok was configured.
-      settings.geminiModel = DEFAULT_GROQ_MODEL;
+      settings.geminiModel = DEFAULT_NEMOTRON_MODEL;
       await settings.save();
     }
 
@@ -38,8 +38,8 @@ export const updateSettings = async (req, res, next) => {
 
     // Only update fields that were sent
     if (githubToken !== undefined) settings.githubToken = githubToken;
-    // The configured Groq model is controlled by the server environment.
-    settings.geminiModel = DEFAULT_GROQ_MODEL;
+    // The configured Nemotron model is controlled by the server environment.
+    settings.geminiModel = DEFAULT_NEMOTRON_MODEL;
     if (autoPostComments !== undefined) settings.autoPostComments = autoPostComments;
 
     await settings.save();

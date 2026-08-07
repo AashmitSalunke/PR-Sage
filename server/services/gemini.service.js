@@ -1,13 +1,13 @@
-const GROQ_BASE_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const NEMOTRON_BASE_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
-const getSelectedModel = (model) => model || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const getSelectedModel = (model) => model || process.env.NEMOTRON_MODEL || 'nvidia/llama-3.1-nemotron-ultra-253b-v1';
 
-const createGroqHeaders = (apiKey) => ({
+const createNemotronHeaders = (apiKey) => ({
   Authorization: `Bearer ${apiKey}`,
   'Content-Type': 'application/json',
 });
 
-const parseGroqStreamChunk = (chunkText) => {
+const parseNemotronStreamChunk = (chunkText) => {
   if (!chunkText) return '';
 
   const lines = chunkText
@@ -39,17 +39,17 @@ const parseGroqStreamChunk = (chunkText) => {
 };
 
 /**
- * Stream a review from Groq using the Groq chat completion API.
+ * Stream a review from Nemotron using NVIDIA's OpenAI-compatible API.
  */
 export async function* streamReview(prompt, model, apiKey) {
-  const key = apiKey || process.env.GROQ_API_KEY;
+  const key = apiKey || process.env.NEMOTRON_API_KEY;
   if (!key) {
-    throw new Error('GROQ_API_KEY not set in the server environment.');
+    throw new Error('NEMOTRON_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(GROQ_BASE_URL, {
+  const response = await fetch(process.env.NEMOTRON_BASE_URL || NEMOTRON_BASE_URL, {
     method: 'POST',
-    headers: createGroqHeaders(key),
+    headers: createNemotronHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -60,12 +60,12 @@ export async function* streamReview(prompt, model, apiKey) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Groq request failed: ${response.status} ${errorText}`);
+    throw new Error(`Nemotron request failed: ${response.status} ${errorText}`);
   }
 
   const reader = response.body?.getReader();
   if (!reader) {
-    throw new Error('Groq stream did not return a readable body.');
+    throw new Error('Nemotron stream did not return a readable body.');
   }
 
   const decoder = new TextDecoder();
@@ -76,7 +76,7 @@ export async function* streamReview(prompt, model, apiKey) {
     if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-    const chunkText = parseGroqStreamChunk(buffer);
+    const chunkText = parseNemotronStreamChunk(buffer);
     if (chunkText) {
       yield chunkText;
     }
@@ -84,24 +84,24 @@ export async function* streamReview(prompt, model, apiKey) {
     buffer = '';
   }
 
-  const finalChunk = parseGroqStreamChunk(buffer);
+  const finalChunk = parseNemotronStreamChunk(buffer);
   if (finalChunk) {
     yield finalChunk;
   }
 }
 
 /**
- * One-shot (non-streaming) Groq call.
+ * One-shot (non-streaming) Nemotron call.
  */
 export const generateReview = async (prompt, model, apiKey) => {
-  const key = apiKey || process.env.GROQ_API_KEY;
+  const key = apiKey || process.env.NEMOTRON_API_KEY;
   if (!key) {
-    throw new Error('GROQ_API_KEY not set in the server environment.');
+    throw new Error('NEMOTRON_API_KEY not set in the server environment.');
   }
 
-  const response = await fetch(GROQ_BASE_URL, {
+  const response = await fetch(process.env.NEMOTRON_BASE_URL || NEMOTRON_BASE_URL, {
     method: 'POST',
-    headers: createGroqHeaders(key),
+    headers: createNemotronHeaders(key),
     body: JSON.stringify({
       model: getSelectedModel(model),
       temperature: 0.3,
@@ -111,7 +111,7 @@ export const generateReview = async (prompt, model, apiKey) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Groq request failed: ${response.status} ${errorText}`);
+    throw new Error(`Nemotron request failed: ${response.status} ${errorText}`);
   }
 
   const json = await response.json();
@@ -119,6 +119,6 @@ export const generateReview = async (prompt, model, apiKey) => {
 };
 
 /**
- * Groq model list intentionally kept to a single default model.
+ * Nemotron model list intentionally kept to a single configured model.
  */
-export const listModels = () => ['llama-3.3-70b-versatile'];
+export const listModels = () => [getSelectedModel()];
